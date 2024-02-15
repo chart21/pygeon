@@ -23,11 +23,10 @@ def train_model(model,dataset_name,num_epochs,lr, transform = "standard"):
     optimizer = optim.Adam(model.parameters(), lr=lr)
     train.train_and_evaluate(model, train_loader, test_loader, num_epochs)
 
-def train_test_model(model,dataset_name,num_epochs,lr, transform = "standard"):
+def train_test_model(model,dataset_name,num_epochs,lr, transform = "standard", model_name="LeNet"):
     train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    model_name = model.__class__.__name__
     train.train_test(model, train_loader, test_loader, num_epochs, model_name, dataset_name, transform)
 
 def load_model(model,filepath):
@@ -48,28 +47,31 @@ def export_test_dataset(dataset_name):
     data_load.export_dataset(test_set,'./data/'+dataset_name+'_test_images.bin','./data/'+dataset_name+'_test_labels.bin')
 
 def train_all(num_epochs,lr):
-    models_mnist = cnns.LeNet(num_classes=10)
-    models_cifar10 = [cnns.AlexNet(num_classes=10),cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
-    models_cifar100 = [cnns.AlexNet(num_classes=100),cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
-    for model in models_mnist:
+    models_mnist = [(cnns.LeNet(num_classes=10),"LeNet")]
+    models_cifar10 = [(cnns.AlexNet(num_classes=10),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=10),"AlexNet_32"),(cnns.VGG16(num_classes=10),"VGG16"),(cnns.ResNet18_avg(num_classes=10),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=10),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=10),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=10),"ResNet152_avg"),(cnns.ResNet50(num_classes=10),"ResNet50"),(cnns.ResNet101(num_classes=10),"ResNet101"),(cnns.ResNet152(num_classes=10),"ResNet152")]   
+    models_cifar100 = [(cnns.AlexNet(num_classes=100),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=100),"AlexNet_32"),(cnns.VGG16(num_classes=100),"VGG16"),(cnns.ResNet18_avg(num_classes=100),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=100),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=100),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=100),"ResNet152_avg"),(cnns.ResNet50(num_classes=100),"ResNet50"),(cnns.ResNet101(num_classes=100),"ResNet101"),(cnns.ResNet152(num_classes=100),"ResNet152")]
+    # models_mnist = [cnns.LeNet(num_classes=10)]
+    # models_cifar10 = [cnns.AlexNet(num_classes=10),cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
+    # models_cifar100 = [cnns.AlexNet(num_classes=100),cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
+    for model, model_name in models_mnist:
         #get model name
         transform = "standard"
-        train_test_model(model,"MNIST", num_epochs, lr, transform)
+        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name)
         transform = "custom"
-        train_test_model(model,"MNIST", num_epochs, lr, transform)
-    for model in models_cifar10:
+        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name)
+    for model, model_name in models_cifar10:
         #get model name
         transform = "standard"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform)
+        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name)
         transform = "custom"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform)
-    for model in models_cifar100:
+        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name)
+    for model, model_name in models_cifar100:
         #get model name
         model_name = model.__class__.__name__
         transform = "standard"
-        train_test_model(model,"CIFAR-100", num_epochs, lr, transform)
+        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name)
         transform = "custom"
-        train_test_model(model,"CIFAR-100", num_epochs, lr, transform)
+        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name)
     
 def main():
     #if directory models does not exist, create it

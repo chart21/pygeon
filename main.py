@@ -56,7 +56,7 @@ def train_all(num_epochs,lr):
         dataset_name = "MNIST"
         transform = "standard"
         train_test_model(model,"MNIST", num_epochs, lr, transform)
-        trasform = "custom"
+        transform = "custom"
         train_test_model(model,"MNIST", num_epochs, lr, transform)
     for mode in models_cifar10:
         #get model name
@@ -71,10 +71,13 @@ def train_all(num_epochs,lr):
         dataset_name = "CIFAR-100"
         transform = "standard"
         train_test_model(model,"CIFAR-100", num_epochs, lr, transform)
-        trasform = "custom"
+        transform = "custom"
         train_test_model(model,"CIFAR-100", num_epochs, lr, transform)
     
 def main():
+    #if directory models does not exist, create it
+    os.makedirs('models', exist_ok=True)
+    
     train_all(20,0.01)
     #model = LeNet5(num_classes=10) # replace with Qunatized LeNet
     # dataset_name = 'MNIST'

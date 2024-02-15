@@ -69,6 +69,7 @@ def evaluate(model, test_loader):
     print(f"Accuracy of the model on the test set: {accuracy:.2f}%")
 
 def train_test(model, train_loader, test_loader, num_epochs, model_name, dataset_name, transform="standard"):
+    print(f"Training {model_name} on {dataset_name} with {transform} transform ...")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
@@ -110,6 +111,7 @@ def train_test(model, train_loader, test_loader, num_epochs, model_name, dataset
         accuracy = 100 * correct / total
         print(f"Accuracy of the model on the test set: {accuracy:.2f}%")
         if accuracy > best_accuracy:
+            print(f"Accuracy improved, saving model")
             best_accuracy = accuracy
             torch.save(model.state_dict(), "./models/" + model_name + "_" + dataset_name + "_" + transform + "_best.pth")
             with open("./models/" + model_name + "_" + dataset_name + "_" + transform + "_best.txt", "w") as f:

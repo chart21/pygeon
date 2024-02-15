@@ -5,7 +5,7 @@ import torchvision.models as models
 # Define the models
 
 class LeNet(nn.Module):
-    def __init__(self):
+    def __init__(self, num_classes=10):
         super(LeNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(1, 20, kernel_size=5),
@@ -19,7 +19,7 @@ class LeNet(nn.Module):
             nn.Flatten(),
             nn.Linear(800, 500),
             nn.ReLU(),
-            nn.Linear(500, 10)
+            nn.Linear(500, num_classes)
         )
 
     def forward(self, x):

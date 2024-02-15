@@ -9,7 +9,7 @@ import numpy as np
 import os
 from torch import nn
 from torch import optim
-from deepreduce_models.resnet import *
+# from deepreduce_models.resnet import *
 
 def save_model(model,filepath):
     parameter_export.save_weights_compatible_with_cpp(model, filepath+'.bin')

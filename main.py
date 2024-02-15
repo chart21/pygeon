@@ -49,8 +49,8 @@ def export_test_dataset(dataset_name):
 
 def train_all(num_epochs,lr):
     models_mnist = cnns.LeNet(num_classes=10)
-    models_cifar10 = [cnns.AlexNet(num_classes=10),cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
-    models_cifar100 = [cnns.AlexNet(num_classes=100),cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
+    models_cifar10 = [cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
+    models_cifar100 = [cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
     for model in models_mnist:
         #get model name
         dataset_name = "MNIST"

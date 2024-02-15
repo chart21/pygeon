@@ -8,28 +8,33 @@ import struct
 import numpy as np
 
 # Define transformations for the datasets
-# Define transformations for the standard MNIST dataset (28x28)
-# transform_mnist_standard = transforms.Compose([
-#     transforms.ToTensor(),
-#     transforms.Normalize((0.5,), (0.5,))
-# ])
-
-# transform_cifar10 = transforms.Compose([
-#     transforms.ToTensor(),
-#     transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-# ])
-
-transform_mnist_standard = transforms.Compose([
+#Define transformations for the standard MNIST dataset (28x28)
+transform_mnist = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.1307,), (0.3081,))
+    transforms.Normalize((0.5,), (0.5,))
 ])
 
 transform_cifar10 = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
 ])
 
 transform_cifar100 = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+])
+
+transform_mnist_custom = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.1307,), (0.3081,))
+])
+
+transform_cifar10_custom = transforms.Compose([
+    transforms.ToTensor(),
+    transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2470, 0.2435, 0.2616))
+])
+
+transform_cifar100_custom = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5071, 0.4867, 0.4408), (0.2675, 0.2565, 0.2761))
 ])
@@ -45,21 +50,33 @@ transform_imagenet = transforms.Compose([
 ])
 
 # Define a function to load the datasets
-def get_dataset(dataset_name):
+def get_dataset(dataset_name, transform):
     train_dataset = None
     test_dataset = None
     num_classes = None
     if dataset_name == "MNIST":
-        train_dataset = datasets.MNIST(root="./data", train=True, transform=transform_mnist_standard, download=True)
-        test_dataset = datasets.MNIST(root="./data", train=False, transform=transform_mnist_standard)
+        if transform == "standard":
+            train_dataset = datasets.MNIST(root="./data", train=True, transform=transform_mnist, download=True)
+            test_dataset = datasets.MNIST(root="./data", train=False, transform=transform_mnist)
+        elif transform == "custom":
+            train_dataset = datasets.MNIST(root="./data", train=True, transform=transform_mnist_custom, download=True)
+            test_dataset = datasets.MNIST(root="./data", train=False, transform=transform_mnist_custom)
         num_classes = 10
     elif dataset_name == "CIFAR-10":
-        train_dataset = datasets.CIFAR10(root="./data", train=True, transform=transform_cifar10, download=True)
-        test_dataset = datasets.CIFAR10(root="./data", train=False, transform=transform_cifar10)
+        if transform == "standard":
+            train_dataset = datasets.CIFAR10(root="./data", train=True, transform=transform_cifar10, download=True)
+            test_dataset = datasets.CIFAR10(root="./data", train=False, transform=transform_cifar10)
+        elif transform == "custom":
+            train_dataset = datasets.CIFAR10(root="./data", train=True, transform=transform_cifar10_custom, download=True)
+            test_dataset = datasets.CIFAR10(root="./data", train=False, transform=transform_cifar10_custom)
         num_classes = 10
     elif dataset_name == "CIFAR-100":
-        train_dataset = datasets.CIFAR100(root="./data", train=True, transform=transform_cifar100, download=True)
-        test_dataset = datasets.CIFAR100(root="./data", train=False, transform=transform_cifar100)
+        if transform == "standard":
+            train_dataset = datasets.CIFAR100(root="./data", train=True, transform=transform_cifar100, download=True)
+            test_dataset = datasets.CIFAR100(root="./data", train=False, transform=transform_cifar100)
+        elif transform == "custom":
+            train_dataset = datasets.CIFAR100(root="./data", train=True, transform=transform_cifar100_custom, download=True)
+            test_dataset = datasets.CIFAR100(root="./data", train=False, transform=transform_cifar100_custom)
         num_classes = 100
     elif dataset_name == "ImageNet-Tiny":
         train_dataset = datasets.ImageFolder(root="./data/tiny-imagenet-200/train", transform=transform_imagenet_tiny)
@@ -74,8 +91,8 @@ def get_dataset(dataset_name):
 
     return train_dataset, test_dataset, num_classes
 
-def load_dataset(dataset_name):
-    train_dataset, test_dataset, num_classes = get_dataset(dataset_name) 
+def load_dataset(dataset_name, transform="standard"):
+    train_dataset, test_dataset, num_classes = get_dataset(dataset_name, transform)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
     

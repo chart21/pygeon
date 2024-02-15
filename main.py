@@ -49,26 +49,23 @@ def export_test_dataset(dataset_name):
 
 def train_all(num_epochs,lr):
     models_mnist = cnns.LeNet(num_classes=10)
-    models_cifar10 = [cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
-    models_cifar100 = [cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
+    models_cifar10 = [cnns.AlexNet(num_classes=10),cnns.AlexNet_32(num_classes=10),cnns.VGG16(num_classes=10),cnns.ResNet18_avg(num_classes=10),cnns.ResNet50_avg(num_classes=10),cnns.ResNet101_avg(num_classes=10),cnns.ResNet152_avg(num_classes=10)]
+    models_cifar100 = [cnns.AlexNet(num_classes=100),cnns.AlexNet_32(num_classes=100),cnns.VGG16(num_classes=100),cnns.ResNet18_avg(num_classes=100),cnns.ResNet50_avg(num_classes=100),cnns.ResNet101_avg(num_classes=100),cnns.ResNet152_avg(num_classes=100)]
     for model in models_mnist:
         #get model name
-        dataset_name = "MNIST"
         transform = "standard"
         train_test_model(model,"MNIST", num_epochs, lr, transform)
         transform = "custom"
         train_test_model(model,"MNIST", num_epochs, lr, transform)
-    for mode in models_cifar10:
+    for model in models_cifar10:
         #get model name
-        dataset_name = "CIFAR-10"
         transform = "standard"
         train_test_model(model,"CIFAR-10", num_epochs, lr, transform)
-        trasform = "custom"
+        transform = "custom"
         train_test_model(model,"CIFAR-10", num_epochs, lr, transform)
     for model in models_cifar100:
         #get model name
         model_name = model.__class__.__name__
-        dataset_name = "CIFAR-100"
         transform = "standard"
         train_test_model(model,"CIFAR-100", num_epochs, lr, transform)
         transform = "custom"
@@ -78,7 +75,7 @@ def main():
     #if directory models does not exist, create it
     os.makedirs('models', exist_ok=True)
     
-    train_all(20,0.01)
+    train_all(2,0.01)
     #model = LeNet5(num_classes=10) # replace with Qunatized LeNet
     # dataset_name = 'MNIST'
     # modelpath = './models/lenet5_mnist'

@@ -77,48 +77,21 @@ def main():
     #if directory models does not exist, create it
     os.makedirs('models', exist_ok=True)
     
-    train_all(2,0.01)
-    #model = LeNet5(num_classes=10) # replace with Qunatized LeNet
-    # dataset_name = 'MNIST'
-    # modelpath = './models/lenet5_mnist'
-    # num_epochs = 80
-    # lr = 0.01
-    # train_model(model,dataset_name,num_epochs,lr) 
-    # parameter_export.save_weights_compatible_with_cpp(model, modelpath+'.bin')
-    #export_test_dataset(dataset_name) 
-    # parameter_export.save_quantized_weights_compatible_with_cpp(model, modelpath+'.bin') 
-    # parameter_export.save_quantization_params(model, modelpath+'bin_quant')
-    # train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name) # replace with qunatized dataset loader
-    # data_load.export_quantized_dataset(test_loader,'./data/'+dataset_name+'_test_images.bin','./data/'+dataset_name+'_test_labels.bin') # export qunatized dataset
+    # REPLACE with tour model
+    model = cnns.LeNet(num_classes=10)
+    dataset_name = 'MNIST'
+    modelpath = './models/lenet5_mnist'
 
-
-
-    # model = DRD_C100_230K(num_classes=100)  # or any other model you have
-    # model = DRD_C100_115K(num_classes=100)  # or any other model you have
-    # model = cnns.ResNet50(num_classes=100)
-    # dataset_name = 'CIFAR-100'
-    # modelpath = './deepreduce_models/CIFAR100_models/model_DRD_C100_115K'
-    # num_epochs = 20
-    # lr = 0.001
-
-    # load_model(model,modelpath)
-    # load_model(model,'./models/resnet50_cifar100')
-    # save_model(model,'./deepreduce_models/CIFAR100_models/model_DRD_C100_230K_mod')
-    # load_checkpoint(model,modelpath)
-    # export_pth_model(model,modelpath)
-
-    # parameter_export.write_params(model,'./deepreduce_models/CIFAR100_models/model_DRD_C100_230K.bin')
-    # print(model)
-
-    # parameter_export.read_params(model,'./deepreduce_models/CIFAR100_models/model_DRD_C100_230K.bin')
-    # parameter_export.import_weights_compatible_with_cpp(model,'./deepreduce_models/CIFAR100_models/model_DRD_C100_230K.bin')
-    # test_model(model,dataset_name)
-    # misc.print_layers_and_params(model)
-    # print(model)
-    # save_model(model,modelpath)
-    # test_model(model,dataset_name)
-    # export_test_dataset(dataset_name)
-
+    # Train the model
+    num_epochs = 80
+    lr = 0.01
+    train_model(model,dataset_name,num_epochs,lr) 
+    
+    # Export the test dataset as a .bin file for PIGEON
+    export_test_dataset(dataset_name) 
+    
+    # Export the model as a .bin file for PIGEON
+    parameter_export.save_weights_compatible_with_cpp(model, modelpath+'.bin')
 
 if __name__ == '__main__':
     main()

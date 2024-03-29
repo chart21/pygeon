@@ -1,5 +1,6 @@
 models/
 deepreduce_models/
+bin_data/
 data/
 __pycache__/
 *.pth

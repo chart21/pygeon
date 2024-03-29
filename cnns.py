@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torchvision.models as models
+import torch.nn.functional as F
 
 # Define the models
 
@@ -25,6 +26,35 @@ class LeNet(nn.Module):
     def forward(self, x):
         x = self.features(x)
         x = self.classifier(x)
+        return x
+
+class LeNet5(nn.Module):
+    def __init__(self, num_classes=10):
+        super(LeNet5, self).__init__()
+        # First convolutional layer with 1 input channel, 6 output channels, 5x5 kernel, stride of 1, padding of 2
+        self.conv1 = nn.Conv2d(1, 6, 5, stride=1, padding=2)
+        # Second convolutional layer with 6 input channels, 16 output channels, 5x5 kernel, stride of 1, no padding
+        self.conv2 = nn.Conv2d(6, 16, 5, stride=1, padding=0)
+        # First fully connected layer
+        self.fc1 = nn.Linear(16 * 5 * 5, 120)  # Assuming input image size is 32x32
+        # Second fully connected layer
+        self.fc2 = nn.Linear(120, 84)
+        # Third fully connected layer (output layer)
+        self.fc3 = nn.Linear(84, num_classes)
+
+    def forward(self, x):
+        # Pass the input through the first conv layer, then ReLU, then AvgPool
+        x = F.avg_pool2d(F.relu(self.conv1(x)), 2)
+        # Pass the result through the second conv layer, then ReLU, then AvgPool
+        x = F.avg_pool2d(F.relu(self.conv2(x)), 2)
+        # Flatten the tensor for the fully connected layers
+        x = torch.flatten(x, 1)
+        # Pass through the first fully connected layer, then ReLU
+        x = F.relu(self.fc1(x))
+        # Pass through the second fully connected layer, then ReLU
+        x = F.relu(self.fc2(x))
+        # Pass through the third fully connected layer
+        x = self.fc3(x)
         return x
 
 class AlexNet(nn.Module):

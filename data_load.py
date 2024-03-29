@@ -50,49 +50,49 @@ transform_imagenet = transforms.Compose([
 ])
 
 # Define a function to load the datasets
-def get_dataset(dataset_name, transform):
+def get_dataset(dataset_name, transform, data_path="./data"):
     train_dataset = None
     test_dataset = None
     num_classes = None
     if dataset_name == "MNIST":
         if transform == "standard":
-            train_dataset = datasets.MNIST(root="./data", train=True, transform=transform_mnist, download=True)
-            test_dataset = datasets.MNIST(root="./data", train=False, transform=transform_mnist)
+            train_dataset = datasets.MNIST(root=data_path, train=True, transform=transform_mnist, download=True)
+            test_dataset = datasets.MNIST(root=data_path, train=False, transform=transform_mnist)
         elif transform == "custom":
-            train_dataset = datasets.MNIST(root="./data", train=True, transform=transform_mnist_custom, download=True)
-            test_dataset = datasets.MNIST(root="./data", train=False, transform=transform_mnist_custom)
+            train_dataset = datasets.MNIST(root=data_path, train=True, transform=transform_mnist_custom, download=True)
+            test_dataset = datasets.MNIST(root=data_path, train=False, transform=transform_mnist_custom)
         num_classes = 10
     elif dataset_name == "CIFAR-10":
         if transform == "standard":
-            train_dataset = datasets.CIFAR10(root="./data", train=True, transform=transform_cifar10, download=True)
-            test_dataset = datasets.CIFAR10(root="./data", train=False, transform=transform_cifar10)
+            train_dataset = datasets.CIFAR10(root=data_path, train=True, transform=transform_cifar10, download=True)
+            test_dataset = datasets.CIFAR10(root=data_path, train=False, transform=transform_cifar10)
         elif transform == "custom":
-            train_dataset = datasets.CIFAR10(root="./data", train=True, transform=transform_cifar10_custom, download=True)
-            test_dataset = datasets.CIFAR10(root="./data", train=False, transform=transform_cifar10_custom)
+            train_dataset = datasets.CIFAR10(root=data_path, train=True, transform=transform_cifar10_custom, download=True)
+            test_dataset = datasets.CIFAR10(root=data_path, train=False, transform=transform_cifar10_custom)
         num_classes = 10
     elif dataset_name == "CIFAR-100":
         if transform == "standard":
-            train_dataset = datasets.CIFAR100(root="./data", train=True, transform=transform_cifar100, download=True)
-            test_dataset = datasets.CIFAR100(root="./data", train=False, transform=transform_cifar100)
+            train_dataset = datasets.CIFAR100(root=data_path, train=True, transform=transform_cifar100, download=True)
+            test_dataset = datasets.CIFAR100(root=data_path, train=False, transform=transform_cifar100)
         elif transform == "custom":
-            train_dataset = datasets.CIFAR100(root="./data", train=True, transform=transform_cifar100_custom, download=True)
-            test_dataset = datasets.CIFAR100(root="./data", train=False, transform=transform_cifar100_custom)
+            train_dataset = datasets.CIFAR100(root=data_path, train=True, transform=transform_cifar100_custom, download=True)
+            test_dataset = datasets.CIFAR100(root=data_path, train=False, transform=transform_cifar100_custom)
         num_classes = 100
     elif dataset_name == "ImageNet-Tiny":
-        train_dataset = datasets.ImageFolder(root="./data/tiny-imagenet-200/train", transform=transform_imagenet_tiny)
-        test_dataset = datasets.ImageFolder(root="./data/tiny-imagenet-200/val", transform=transform_imagenet_tiny)
+        train_dataset = datasets.ImageFolder(root=data_path+"/tiny-imagenet-200/train", transform=transform_imagenet_tiny)
+        test_dataset = datasets.ImageFolder(root=data_path+"tiny-imagenet-200/val", transform=transform_imagenet_tiny)
         num_classes = 200
     elif dataset_name == "ImageNet":
-        train_dataset = datasets.ImageFolder(root="./data/imagenet/train", transform=transform_imagenet)
-        test_dataset = datasets.ImageFolder(root="./data/imagenet/val", transform=transform_imagenet)
+        train_dataset = datasets.ImageFolder(root=data_path+"/train", transform=transform_imagenet)
+        test_dataset = datasets.ImageFolder(root=data_path+"/imagenet/val", transform=transform_imagenet)
         num_classes = 1000
     else:
         raise ValueError(f"Unknown dataset: {dataset_name}")
 
     return train_dataset, test_dataset, num_classes
 
-def load_dataset(dataset_name, transform="standard"):
-    train_dataset, test_dataset, num_classes = get_dataset(dataset_name, transform)
+def load_dataset(dataset_name, transform="standard", data_path="./data"):
+    train_dataset, test_dataset, num_classes = get_dataset(dataset_name, transform, data_path)
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
     test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
     
@@ -112,7 +112,10 @@ def export_dataset(dataset, images_filename, labels_filename):
 
             # Ensure label is an int and write to the binary file
             lbl_data = np.array(label).astype(np.uint32)
-            lbl_file.write(struct.pack('i', lbl_data))
+            lbl_file.write(lbl_data.tobytes())
+            # print(type(label))
+            # lbl_file.write(struct.pack('i', lbl_data))
+            # lbl_data = int(label)
 
 
 def export_quantized_dataset(dataset, images_filename, labels_filename):

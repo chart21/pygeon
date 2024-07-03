@@ -27,6 +27,32 @@ class LeNet(nn.Module):
         x = self.classifier(x)
         return x
 
+class LeNet5(nn.Module):
+    def __init__(self, num_classes=10):
+        super(LeNet5, self).__init__()
+        self.features = nn.Sequential(
+            nn.Conv2d(1, 6, kernel_size=5, padding=2),
+            nn.ReLU(),
+            nn.AvgPool2d(2, stride=2),
+            nn.Conv2d(6, 16, kernel_size=5),
+            nn.ReLU(),
+            nn.AvgPool2d(2, stride=2),
+        )
+        self.classifier = nn.Sequential(
+            nn.Flatten(),
+            nn.Linear(400, 120),
+            nn.ReLU(),
+            nn.Linear(120, 84),
+            nn.ReLU(),
+            nn.Linear(84, num_classes)
+        )
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.classifier(x)
+        return x
+
+
 class AlexNet(nn.Module):
     def __init__(self, num_classes=10):
         super(AlexNet, self).__init__()
@@ -81,7 +107,6 @@ class AlexNet(nn.Module):
         return x
 
 
-import torch.nn as nn
 
 class AlexNet_32(nn.Module):
     def __init__(self, num_classes=10):

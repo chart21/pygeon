@@ -1,14 +1,11 @@
 import torch
-import torch.nn as nn
-import torchvision.models as models
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader
 import struct
 import numpy as np
-
 # Define transformations for the datasets
-#Define transformations for the standard MNIST dataset (28x28)
+
 transform_mnist = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize((0.5,), (0.5,))
@@ -112,20 +109,5 @@ def export_dataset(dataset, images_filename, labels_filename):
 
             # Ensure label is an int and write to the binary file
             lbl_data = np.array(label).astype(np.uint32)
-            lbl_file.write(struct.pack('i', lbl_data))
-
-
-def export_quantized_dataset(dataset, images_filename, labels_filename):
-    with open(images_filename, 'wb') as img_file, open(labels_filename, 'wb') as lbl_file:
-        for image, label in dataset:
-            # Convert image to numpy array, ensure it's float32, and flatten
-            img_data = image.numpy().astype(np.int32).flatten()
-
-            # Write the flattened image data to the binary file
-            img_file.write(struct.pack('f' * len(img_data), *img_data))
-
-            # Ensure label is an int and write to the binary file
-            lbl_data = np.array(label).astype(np.uint32)
-            lbl_file.write(struct.pack('i', lbl_data))
-
+            lbl_file.write(lbl_data.tobytes())
 

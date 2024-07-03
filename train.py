@@ -1,19 +1,16 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-import torchvision.datasets as datasets
-import torchvision.transforms as transforms
-# from models import LeNet, AlexNet, VGG16, ResNet50, ResNet152
-# from utils import load_dataset, load_standard_mnist, transform_cifar10, transform_mnist_standard
 import torch.optim as optim
+from torch.utils.data import DataLoader
 
-def train_and_evaluate(model, train_loader, test_loader, num_epochs=20):
+def train_and_evaluate(model, train_loader, test_loader, num_epochs=20, optimizer_class=optim.Adam, learning_rate=0.001, criterion_class=nn.CrossEntropyLoss):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
+    print(f"Training the model on {device} ...")
 
     # Define the loss and the optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(lr=0.001, params=model.parameters())
+    criterion = criterion_class()
+    optimizer = optimizer_class(params=model.parameters(), lr=learning_rate)
 
     # Training loop
     for epoch in range(num_epochs):
@@ -52,10 +49,11 @@ def train_and_evaluate(model, train_loader, test_loader, num_epochs=20):
     return accuracy
 
 
-def evaluate(model, test_loader):
+def evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss):
     model.eval()
     correct = 0
     total = 0
+    criterion = criterion_class()
     with torch.no_grad():
         for inputs, labels in test_loader:
             inputs, labels = inputs.to("cpu"), labels.to("cpu")
@@ -68,15 +66,16 @@ def evaluate(model, test_loader):
     accuracy = 100 * correct / total
     print(f"Accuracy of the model on the test set: {accuracy:.2f}%")
 
-def train_test(model, train_loader, test_loader, num_epochs, model_name, dataset_name, transform="standard"):
-    print(f"Training {model_name} on {dataset_name} with {transform} transform ...")
+def train_test(model, train_loader, test_loader, num_epochs=20, optimizer_class=optim.Adam, learning_rate=0.001, criterion_class=nn.CrossEntropyLoss, model_name="model", dataset_name="dataset", transform="standard"):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
+    print(f"Training {model_name} on {dataset_name} with {transform} transform ({device}) ..." )
 
     # Define the loss and the optimizer
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(lr=0.001, params=model.parameters())
+    criterion = criterion_class()
+    optimizer = optimizer_class(params=model.parameters(), lr=learning_rate)
     best_accuracy = 0.0
+
     # Training loop
     for epoch in range(num_epochs):
         model.train()
@@ -117,5 +116,4 @@ def train_test(model, train_loader, test_loader, num_epochs, model_name, dataset
             with open("./models/" + model_name + "_" + dataset_name + "_" + transform + "_best.txt", "w") as f:
                 f.write(f"Epoch: {epoch + 1}/{num_epochs}\n")
                 f.write(f"Best accuracy: {best_accuracy:.2f}%")
-                
-        
+

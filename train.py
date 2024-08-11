@@ -7,6 +7,7 @@ def train_and_evaluate(model, train_loader, test_loader, num_epochs=20, optimize
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     print(f"Training the model on {device} ...")
+    print("Arguments: num_epochs={}, learning_rate={}, weight_decay={}, dropout={}".format(num_epochs, learning_rate, weight_decay, dropout))
 
     # Define the loss and the optimizer
     criterion = criterion_class()
@@ -70,6 +71,7 @@ def train_test(model, train_loader, test_loader, num_epochs=20, optimizer_class=
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     print(f"Training {model_name} on {dataset_name} with {transform} transform ({device}) ..." )
+    print("Arguments: num_epochs={}, learning_rate={}, weight_decay={}, dropout={}".format(num_epochs, learning_rate, weight_decay, dropout))
 
     # Define the loss and the optimizer
     criterion = criterion_class()

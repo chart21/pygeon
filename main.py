@@ -117,10 +117,12 @@ def main():
 
     # Perform the specified action
     if args.action == 'train':
+        print("Parameters set to: num_epochs={}, lr={}, transform={}, criterion={}, optimizer={}, weight_decay={}, dropout={}, batch_size={}".format(args.num_epochs, args.lr, args.transform, args.criterion, args.optimizer, args.weight_decay, args.dropout, args.batch_size))
         train_model(model, args.dataset_name, args.num_epochs, args.lr, args.transform, criterion, optimizer, weight_decay, dropout, batch_size)
     elif args.action == 'import':
         load_model(model, args.modelpath)
     elif args.action == 'train_all':
+        print("Parameters set to: num_epochs={}, lr={}, criterion={}, optimizer={}, weight_decay={}, dropout={}, batch_size={}".format(args.num_epochs, args.lr, args.criterion, args.optimizer, args.weight_decay, args.dropout, args.batch_size))
         train_all(args.num_epochs, args.lr, criterion, optimizer, weight_decay, dropout, batch_size)
     elif args.action == 'test':
         test_model(model, args.dataset_name, args.transform, batch_size, criterion)

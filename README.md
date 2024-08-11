@@ -49,7 +49,7 @@ python main.py --action train_all --num_epochs 40 --lr 0.001 --criterion CrossEn
 
 ### Command-Line Arguments
 
-- `--model`: Model to use (default: `LeNet`)
+- `--model`: Model to use (default: `LeNet5`)
 - `--num_classes`: Number of classes (default: 10)
 - `--dataset_name`: Dataset name (default: `MNIST`)
 - `--modelpath`: Path to save/load the model (default: `./models/lenet5_mnist`)
@@ -57,7 +57,10 @@ python main.py --action train_all --num_epochs 40 --lr 0.001 --criterion CrossEn
 - `--lr`: Learning rate (default: 0.01)
 - `--criterion`: Loss function (default: `CrossEntropyLoss`)
 - `--optimizer`: Optimizer (default: `Adam`)
-- `--action`: Action to perform on the model (choices: `train`, `import`, `train_all`, `none`; default: `none`)
+- `--dropout`: Dropout rate (default: 0.0)
+- `--weight_decay`: Weight decay (default: 0.0)
+- `--batch_size`: Batch size (default: 32)
+- `--action`: Action to perform on the model (choices: `train`, `import`, `train_all`, `test`, `none`; default: `train`)
 - `--export_model`: Export the model as a .bin file for PIGEON (flag)
 - `--export_dataset`: Export the test dataset as a .bin file for PIGEON (flag)
 - `--transform`: Type of transformation to apply (choices: `custom`, `standard`; default: `standard`)

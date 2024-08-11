@@ -17,13 +17,13 @@ def save_model(model,filepath):
 def export_pth_model(model,filepath):
     torch.save(model.state_dict(), filepath+'.pth')
 
-def train_model(model,dataset_name,num_epochs=80,lr=0.001, transform = "standard", criterion=nn.CrossEntropyLoss, optimizer=optim.Adam):
-    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform)
-    train.train_and_evaluate(model, train_loader, test_loader, num_epochs, optimizer, lr, criterion)
+def train_model(model,dataset_name,num_epochs=80,lr=0.001, transform = "standard", criterion=nn.CrossEntropyLoss, optimizer=optim.Adam, weight_decay=0.0, dropout=0.0, batch_size=32):
+    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
+    train.train_and_evaluate(model, train_loader, test_loader, num_epochs, optimizer, lr, criterion, weight_decay, dropout)
 
-def train_test_model(model,dataset_name,num_epochs=80,lr=0.001, transform = "standard", model_name="LeNet", criterion=nn.CrossEntropyLoss, optimizier=optim.Adam):
-    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform)
-    train.train_test(model, train_loader, test_loader, num_epochs, optimizier, lr, criterion,  model_name, dataset_name, transform)
+def train_test_model(model,dataset_name,num_epochs=80,lr=0.001, transform = "standard", model_name="LeNet5", criterion=nn.CrossEntropyLoss, optimizier=optim.Adam, weight_decay=0.0, dropout=0.0, batch_size=32):
+    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
+    train.train_test(model, train_loader, test_loader, num_epochs, optimizier, lr, criterion,  model_name, dataset_name, transform, weight_decay, dropout)
 
 def load_model(model,filepath):
     model.load_state_dict(torch.load(filepath+'.pth', map_location=torch.device('cpu')))
@@ -33,86 +33,103 @@ def load_checkpoint(model,filepath):
     model.load_state_dict({k.replace('module.',''): v for k, v in checkpoint['snet'].items()})
 
 
-def test_model(model,dataset_name):
-    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name)
-    train.evaluate(model, test_loader)
+def test_model(model,dataset_name,transform="standard",batch_size=32, criterion=nn.CrossEntropyLoss):
+    train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
+    train.evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss)
 
-def export_test_dataset(dataset_name):
-    train_set, test_set,num_classes = data_load.load_dataset(dataset_name)
+def export_test_dataset(dataset_name,transform="standard",batch_size=32):
+    train_set, test_set,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
     data_load.export_dataset(test_set,'./data/'+dataset_name+'_test_images.bin','./data/'+dataset_name+'_test_labels.bin')
 
-def train_all(num_epochs=80,lr=0.001,criterion=nn.CrossEntropyLoss,optimizer=optim.Adam):
-    models_mnist = [(cnns.LeNet(num_classes=10),"LeNet")]
-    models_cifar10 = [(cnns.AlexNet(num_classes=10),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=10),"AlexNet_32"),(cnns.VGG16(num_classes=10),"VGG16"),(cnns.ResNet18_avg(num_classes=10),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=10),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=10),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=10),"ResNet152_avg"),(cnns.ResNet50(num_classes=10),"ResNet50"),(cnns.ResNet101(num_classes=10),"ResNet101"),(cnns.ResNet152(num_classes=10),"ResNet152")]   
-    models_cifar100 = [(cnns.AlexNet(num_classes=100),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=100),"AlexNet_32"),(cnns.VGG16(num_classes=100),"VGG16"),(cnns.ResNet18_avg(num_classes=100),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=100),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=100),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=100),"ResNet152_avg"),(cnns.ResNet50(num_classes=100),"ResNet50"),(cnns.ResNet101(num_classes=100),"ResNet101"),(cnns.ResNet152(num_classes=100),"ResNet152")]
+def train_all(num_epochs=80,lr=0.001,criterion=nn.CrossEntropyLoss,optimizer=optim.Adam, weight_decay=0.0, dropout=0.0, batch_size=32):
+    models_mnist = [(cnns.LeNet5(num_classes=10,dropout=dropout),"LeNet5")]
+    models_cifar10 = [(cnns.AlexNet(num_classes=10,dropout=dropout),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=10,dropout=dropout),"AlexNet_32"),(cnns.VGG16(num_classes=10,dropout=dropout),"VGG16"),(cnns.ResNet18_avg(num_classes=10,dropout=dropout),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=10,dropout=dropout),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=10,dropout=dropout),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=10,dropout=dropout),"ResNet152_avg"),(cnns.ResNet50(num_classes=10,dropout=dropout),"ResNet50"),(cnns.ResNet101(num_classes=10,dropout=dropout),"ResNet101"),(cnns.ResNet152(num_classes=10,dropout=dropout),"ResNet152")]   
+    models_cifar100 = [(cnns.AlexNet(num_classes=100,dropout=dropout),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=100,dropout=dropout),"AlexNet_32"),(cnns.VGG16(num_classes=100,dropout=dropout),"VGG16"),(cnns.ResNet18_avg(num_classes=100,dropout=dropout),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=100,dropout=dropout),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=100,dropout=dropout),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=100,dropout=dropout),"ResNet152_avg"),(cnns.ResNet50(num_classes=100,dropout=dropout),"ResNet50"),(cnns.ResNet101(num_classes=100,dropout=dropout),"ResNet101"),(cnns.ResNet152(num_classes=100,dropout=dropout),"ResNet152")]
     for model, model_name in models_mnist:
         #get model name
         transform = "standard"
-        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
         transform = "custom"
-        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
     for model, model_name in models_cifar10:
         #get model name
         transform = "standard"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
         transform = "custom"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
     for model, model_name in models_cifar100:
         #get model name
         model_name = model.__class__.__name__
         transform = "standard"
-        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"CIFAR-100", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
         transform = "custom"
-        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name, criterion, optimizer)
+        train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+        # train_model(model,"CIFAR-100", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
 
 def main():
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Train a model and export it for PIGEON')
-    parser.add_argument('--model', type=str, default='LeNet', help='Model to use')
-    parser.add_argument('--num_classes', type=int, default=10, help='Number of classes')
-    parser.add_argument('--dataset_name', type=str, default='MNIST', help='Dataset name')
-    parser.add_argument('--modelpath', type=str, default='./models/lenet5_mnist', help='Path to save/load the model')
-    parser.add_argument('--num_epochs', type=int, default=80, help='Number of epochs')
-    parser.add_argument('--lr', type=float, default=0.01, help='Learning rate')
-    parser.add_argument('--criterion', type=str, default='CrossEntropyLoss', help='Loss function')
-    parser.add_argument('--optimizer', type=str, default='Adam', help='Optimizer')
+    parser.add_argument('--model', type=str, default='LeNet', help='Model to use, default is LeNet')
+    parser.add_argument('--num_classes', type=int, default=10, help='Number of classes, default is 10')
+    parser.add_argument('--dataset_name', type=str, default='MNIST', help='Dataset name, default is MNIST')
+    parser.add_argument('--modelpath', type=str, default='./models/lenet5_mnist', help='Path to save/load the model, default is ./models/lenet5_mnist')
+    parser.add_argument('--num_epochs', type=int, default=5, help='Number of epochs, default is 5')
+    parser.add_argument('--lr', type=float, default=0.01, help='Learning rate, default is 0.01')
+    parser.add_argument('--criterion', type=str, default='CrossEntropyLoss', help='Loss function, default is CrossEntropyLoss')
+    parser.add_argument('--optimizer', type=str, default='Adam', help='Optimizer, default is Adam')
+    parser.add_argument('--dropout', type=float, default=0.0, help='Dropout Rate, default is 0.0')
+    parser.add_argument('--weight_decay', type=float, default=0.0, help='Weight Decay Rate, default is 0.0')
+    parser.add_argument('--batch_size', type=int, default=32, help='Batch Size, default is 32')
 
     # Add arguments for actions
-    parser.add_argument('--action', type=str, choices=['train', 'import', 'train_all', 'none'], default='none', help='Action to perform on the model')
-    parser.add_argument('--export_model', action='store_true', help='Export the model as a .bin file for PIGEON')
-    parser.add_argument('--export_dataset', action='store_true', help='Export the test dataset as a .bin file for PIGEON')
+    parser.add_argument('--action', type=str, choices=['train', 'import', 'train_all', 'test', 'none'], default='train', help='Action to perform on the model. Options are train (default), import, train_all, test, none')
+    parser.add_argument('--export_model', action='store_true', help='Export the model as a .bin file for PIGEON, default is True')
+    parser.add_argument('--export_dataset', action='store_true', help='Export the test dataset as a .bin file for PIGEON, default is True')
     
     # Add argument for transformation
-    parser.add_argument('--transform', type=str, choices=['custom', 'standard'], default='standard', help='Type of transformation to apply')
+    parser.add_argument('--transform', type=str, choices=['custom', 'standard'], default='standard', help='Type of transformation to apply, default is standard')
 
     args = parser.parse_args()
 
     # Create directories if they do not exist
     os.makedirs('models', exist_ok=True)
     os.makedirs('data', exist_ok=True)
+    
+    weight_decay = args.weight_decay
+    dropout = args.dropout
+    batch_size = args.batch_size
 
     # Dynamically create model, criterion, and optimizer
     model_class = getattr(cnns, args.model)
-    model = model_class(num_classes=args.num_classes)
+    model = model_class(num_classes=args.num_classes, dropout=dropout)
     
     criterion = getattr(nn, args.criterion)
     
     optimizer = getattr(optim, args.optimizer)
 
 
+
+
     # Perform the specified action
     if args.action == 'train':
-        train_model(model, args.dataset_name, args.num_epochs, args.lr, args.transform, criterion, optimizer)
+        train_model(model, args.dataset_name, args.num_epochs, args.lr, args.transform, criterion, optimizer, weight_decay, dropout, batch_size)
     elif args.action == 'import':
         load_model(model, args.modelpath)
     elif args.action == 'train_all':
-        train_all(args.num_epochs, args.lr, criterion, optimizer)
+        train_all(args.num_epochs, args.lr, criterion, optimizer, weight_decay, dropout, batch_size)
+    elif args.action == 'test':
+        test_model(model, args.dataset_name, args.transform, batch_size, criterion)
     elif args.action == 'none':
         print("No action specified for the model.")
 
     # Export the test dataset if specified
     if args.export_dataset:
-        export_test_dataset(args.dataset_name)
+        export_test_dataset(args.dataset_name, args.transform, batch_size)
         print("Exported the test dataset for PIGEON.")
     
     # Export the model if specified

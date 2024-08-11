@@ -88,10 +88,10 @@ def get_dataset(dataset_name, transform):
 
     return train_dataset, test_dataset, num_classes
 
-def load_dataset(dataset_name, transform="standard"):
+def load_dataset(dataset_name, transform="standard",batch_size=32):
     train_dataset, test_dataset, num_classes = get_dataset(dataset_name, transform)
-    train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
     
     return train_loader, test_loader, num_classes
 

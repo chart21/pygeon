@@ -5,7 +5,7 @@ import torchvision.models as models
 # Define the models
 
 class LeNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, dropout=0.0):
         super(LeNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(1, 20, kernel_size=5),
@@ -19,6 +19,7 @@ class LeNet(nn.Module):
             nn.Flatten(),
             nn.Linear(800, 500),
             nn.ReLU(),
+            nn.Dropout(dropout),
             nn.Linear(500, num_classes)
         )
 
@@ -28,7 +29,7 @@ class LeNet(nn.Module):
         return x
 
 class LeNet5(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, dropout=0.0):
         super(LeNet5, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(1, 6, kernel_size=5, padding=2),
@@ -42,8 +43,10 @@ class LeNet5(nn.Module):
             nn.Flatten(),
             nn.Linear(400, 120),
             nn.ReLU(),
+            nn.Dropout(dropout),
             nn.Linear(120, 84),
             nn.ReLU(),
+            nn.Dropout(dropout),
             nn.Linear(84, num_classes)
         )
 
@@ -54,7 +57,7 @@ class LeNet5(nn.Module):
 
 
 class AlexNet(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, dropout=0.0):
         super(AlexNet, self).__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 96, kernel_size=11, stride=4, padding=9),
@@ -76,8 +79,10 @@ class AlexNet(nn.Module):
                 nn.Flatten(),
                 nn.Linear(256, 256),
                 nn.ReLU(inplace=True),
+                nn.Dropout(dropout),
                 nn.Linear(256, 256),
                 nn.ReLU(inplace=True),
+                nn.Dropout(dropout),
                 nn.Linear(256, 10),
             )
         elif num_classes == 200:
@@ -86,8 +91,10 @@ class AlexNet(nn.Module):
                 nn.Flatten(),
                 nn.Linear(1024, 1024),
                 nn.ReLU(inplace=True),
+                nn.Dropout(dropout),
                 nn.Linear(1024, 1024),
                 nn.ReLU(inplace=True),
+                nn.Dropout(dropout),
                 nn.Linear(1024, 200),
             )
         elif num_classes == 1000:
@@ -96,8 +103,10 @@ class AlexNet(nn.Module):
                 nn.Flatten(),
                 nn.Linear(9216, 4096),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(4096, 4096),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(4096, 1000),
             )
 
@@ -109,7 +118,7 @@ class AlexNet(nn.Module):
 
 
 class AlexNet_32(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, dropout=0.0):
         super(AlexNet_32, self).__init__()
         self.conv1 = nn.Conv2d(3, 56, kernel_size=3, stride=1, padding=1)
         self.relu1 = nn.ReLU()
@@ -135,11 +144,11 @@ class AlexNet_32(nn.Module):
         self.flatten = nn.Flatten()
         self.fc1 = nn.Linear(128 * 4 * 4, 2048)  # Adjust the size according to your input image size
         self.relu6 = nn.ReLU()
-        self.dropout1 = nn.Dropout(0.5)
+        self.dropout1 = nn.Dropout(dropout)
 
         self.fc2 = nn.Linear(2048, 2048)
         self.relu7 = nn.ReLU()
-        self.dropout2 = nn.Dropout(0.5)
+        self.dropout2 = nn.Dropout(dropout)
 
         self.fc3 = nn.Linear(2048, num_classes)
 
@@ -161,7 +170,7 @@ class AlexNet_32(nn.Module):
             
 
 class VGG16(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=10, dropout=0.0):
         super(VGG16, self).__init__()
         self.vgg = models.vgg16(pretrained=False)
         
@@ -176,8 +185,10 @@ class VGG16(nn.Module):
                 nn.Flatten(),
                 nn.Linear(512, 256),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(256, 256),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(256, 10),
             )
         elif num_classes == 200:
@@ -186,8 +197,10 @@ class VGG16(nn.Module):
                 nn.Flatten(),
                 nn.Linear(512, 512),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(512, 512),
                 nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(512, 200),
             )
         elif num_classes == 1000:
@@ -195,7 +208,11 @@ class VGG16(nn.Module):
                 nn.AvgPool2d(2),
                 nn.Flatten(),
                 nn.Linear(4608, 4096),
+                nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(4096, 4096),
+                nn.ReLU(),
+                nn.Dropout(dropout),
                 nn.Linear(4096, 1000)
             )
 
@@ -305,7 +322,7 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
         
 
-    def __init__(self, block, layers, image_channels, num_classes, pool_option='max'):
+    def __init__(self, block, layers, image_channels, num_classes, pool_option='max', dropout=0.0):
         super(ResNet, self).__init__()
         self.in_channels = 64
         self.conv1 = nn.Conv2d(
@@ -352,29 +369,29 @@ class ResNet(nn.Module):
 
         return x
 
-def ResNet50(img_channel=3, num_classes=1000):
+def ResNet50(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 4, 6, 3], img_channel, num_classes)
 
 
-def ResNet101(img_channel=3, num_classes=1000):
+def ResNet101(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 4, 23, 3], img_channel, num_classes)
 
 
-def ResNet152(img_channel=3, num_classes=1000):
+def ResNet152(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 8, 36, 3], img_channel, num_classes)
 
-def ResNet18(img_channel=3, num_classes=1000):
+def ResNet18(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [2, 2, 2, 2], img_channel, num_classes)
 
-def ResNet50_avg(img_channel=3, num_classes=1000):
+def ResNet50_avg(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 4, 6, 3], img_channel, num_classes, 'avg')
 
-def ResNet101_avg(img_channel=3, num_classes=1000):
+def ResNet101_avg(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 4, 23, 3], img_channel, num_classes, 'avg')
 
-def ResNet152_avg(img_channel=3, num_classes=1000):
+def ResNet152_avg(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [3, 8, 36, 3], img_channel, num_classes, 'avg')
 
-def ResNet18_avg(img_channel=3, num_classes=1000):
+def ResNet18_avg(img_channel=3, num_classes=1000, dropout=0.0):
     return ResNet(block, [2, 2, 2, 2], img_channel, num_classes, 'avg')
 

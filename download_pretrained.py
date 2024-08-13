@@ -11,14 +11,15 @@ cifar_adam_001_pretrained_url = "https://drive.google.com/uc?export=download&id=
 cifar_adam_005_pretrained_url = "https://drive.google.com/uc?export=download&id=1SRYcSy3rLml60Xu4yVkRUqo_iU5gD4ko"
 cifar_sgd_001_pretrained_url = "https://drive.google.com/uc?export=download&id=1DBb5qX1GhFzhrIaewAhmc37bKeTjeg5p"
 lenet5_pretrained_url = "https://drive.google.com/uc?export=download&id=1Y6QLosaVKw_MChCmOfW7L6rqOYmky4Dn"
-
+adam_001_wd_pretrained_url = "https://drive.google.com/uc?export=download&id=1xXFzoKZ9JI8JPjVszFT3T1Lniul6-GCb"
 # Mapping of argument names to URLs, target directories, and final filenames
 download_options = {
     "datasets": (datasets_url, "./data", "datasets"),
     "single_model": (single_model, "./models/pretrained", "vgg16_cifar_standard.bin"),
-    "cifar_adam_001": (cifar_adam_001_pretrained_url, "./models/pretrained", "Cifar_adma_001"),
+    "cifar_adam_001": (cifar_adam_001_pretrained_url, "./models/pretrained", "Cifar_adam_001"),
     "cifar_adam_005": (cifar_adam_005_pretrained_url, "./models/pretrained", "Cifar_adam_005"),
     "cifar_sgd_001": (cifar_sgd_001_pretrained_url, "./models/pretrained", "Cifar_sgd_001"),
+    "adam_001_wd": (adam_001_wd_pretrained_url, "./models/pretrained", "adam_001_wd"),
     "lenet": (lenet5_pretrained_url, "./models/pretrained", "MNIST_LeNet5")
 }
 
@@ -54,7 +55,7 @@ def download_and_extract(url, target_dir, final_filename=None, is_zip=True):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Download specified files.")
-    parser.add_argument("files", nargs="+", help="List of files to download (options: all, datasets, single_model, cifar_adam_001, cifar_adam_005, cifar_sgd_001, lenet)")
+    parser.add_argument("files", nargs="+", help="List of files to download (options: all, datasets, single_model, cifar_adam_001, cifar_adam_005, cifar_sgd_001, lenet, adam_001_wd)")
 
     args = parser.parse_args()
     files_to_download = args.files

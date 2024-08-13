@@ -11,7 +11,7 @@ cifar_adam_001_pretrained_url = "https://drive.google.com/uc?export=download&id=
 cifar_adam_005_pretrained_url = "https://drive.google.com/uc?export=download&id=1SRYcSy3rLml60Xu4yVkRUqo_iU5gD4ko"
 cifar_sgd_001_pretrained_url = "https://drive.google.com/uc?export=download&id=1DBb5qX1GhFzhrIaewAhmc37bKeTjeg5p"
 lenet5_pretrained_url = "https://drive.google.com/uc?export=download&id=1Y6QLosaVKw_MChCmOfW7L6rqOYmky4Dn"
-adam_001_wd_pretrained_url = "https://drive.google.com/uc?export=download&id=1xXFzoKZ9JI8JPjVszFT3T1Lniul6-GCb"
+adam_001_wd_pretrained_url = "https://drive.google.com/uc?export=download&id=1dwFh2t6xQCgqdHpy7H--qHIWOZhoAiR2"
 imagenet_pretrained_url = "https://drive.google.com/uc?export=download&id=1o1n5d3qF3E49l7NxhDCuYQQ16Kyj91Fe"
 # Mapping of argument names to URLs, target directories, and final filenames
 download_options = {

@@ -12,6 +12,7 @@ cifar_adam_005_pretrained_url = "https://drive.google.com/uc?export=download&id=
 cifar_sgd_001_pretrained_url = "https://drive.google.com/uc?export=download&id=1DBb5qX1GhFzhrIaewAhmc37bKeTjeg5p"
 lenet5_pretrained_url = "https://drive.google.com/uc?export=download&id=1Y6QLosaVKw_MChCmOfW7L6rqOYmky4Dn"
 adam_001_wd_pretrained_url = "https://drive.google.com/uc?export=download&id=1xXFzoKZ9JI8JPjVszFT3T1Lniul6-GCb"
+imagenet_pretrained_url = "https://drive.google.com/uc?export=download&id=1IanHMJ59cWRs0fOBouYz3ioeL8qHTFa0"
 # Mapping of argument names to URLs, target directories, and final filenames
 download_options = {
     "datasets": (datasets_url, "./data", "datasets"),
@@ -20,7 +21,9 @@ download_options = {
     "cifar_adam_005": (cifar_adam_005_pretrained_url, "./models/pretrained", "Cifar_adam_005"),
     "cifar_sgd_001": (cifar_sgd_001_pretrained_url, "./models/pretrained", "Cifar_sgd_001"),
     "adam_001_wd": (adam_001_wd_pretrained_url, "./models/pretrained", "adam_001_wd"),
-    "lenet": (lenet5_pretrained_url, "./models/pretrained", "MNIST_LeNet5")
+    "lenet": (lenet5_pretrained_url, "./models/pretrained", "MNIST_LeNet5"),
+    "imagenet": (imagenet_pretrained_url, "./models/pretrained/ImageNet", "imagenet")
+    
 }
 
 def download_and_extract(url, target_dir, final_filename=None, is_zip=True):
@@ -70,6 +73,11 @@ if __name__ == "__main__":
             download_and_extract(url, target_dir, final_filename, is_zip)
         else:
             print(f"Unknown file specified: {file_key}")
+
+    if "all" or "imagenet" in files_to_download:
+        #move files to the correct location
+        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_labels.bin", "./data/imagenet_128-256_labels.bin")
+        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_images.bin", "./data/imagenet_128-256_images.bin")
 
     print("Download and extraction complete.")
 

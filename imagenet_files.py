@@ -112,9 +112,9 @@ def export_dataset(dataset, images_filename, labels_filename):
 
 # Export the dataset
 os.makedirs('data', exist_ok=True)
-os.makedirs('models/pretrained', exist_ok=True)
-export_dataset(val_dataset, 'data/imagenet_images128-256.bin', 'data/imagenet_labels128-256.bin')
-print('Exported dataset to data/imagenet_images128-256.bin and data/imagenet_labels128-256.bin')
+os.makedirs('models/pretrained/ImageNet', exist_ok=True)
+export_dataset(val_dataset, 'data/imagenet_128-256_images.bin', 'data/imagenet_128-256_labels.bin')
+print('Exported dataset to data/imagenet_128-256_images.bin and data/imagenet_128-256_labels.bin')
 for model in models:
-    save_weights_compatible_with_cpp(model, f'models/pretrained/{model.__class__.__name__}_imagenet.bin')
+    save_weights_compatible_with_cpp(model, f'models/pretrained/ImageNet/{model.__class__.__name__}_imagenet.bin')
     print(f'Saved weights for {model.__class__.__name__} to models/pretrained/{model.__class__.__name__}_imagenet.bin')

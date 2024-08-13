@@ -12,7 +12,7 @@ cifar_adam_005_pretrained_url = "https://drive.google.com/uc?export=download&id=
 cifar_sgd_001_pretrained_url = "https://drive.google.com/uc?export=download&id=1DBb5qX1GhFzhrIaewAhmc37bKeTjeg5p"
 lenet5_pretrained_url = "https://drive.google.com/uc?export=download&id=1Y6QLosaVKw_MChCmOfW7L6rqOYmky4Dn"
 adam_001_wd_pretrained_url = "https://drive.google.com/uc?export=download&id=1xXFzoKZ9JI8JPjVszFT3T1Lniul6-GCb"
-imagenet_pretrained_url = "https://drive.google.com/uc?export=download&id=1IanHMJ59cWRs0fOBouYz3ioeL8qHTFa0"
+imagenet_pretrained_url = "https://drive.google.com/uc?export=download&id=1o1n5d3qF3E49l7NxhDCuYQQ16Kyj91Fe"
 # Mapping of argument names to URLs, target directories, and final filenames
 download_options = {
     "datasets": (datasets_url, "./data", "datasets"),
@@ -22,7 +22,7 @@ download_options = {
     "cifar_sgd_001": (cifar_sgd_001_pretrained_url, "./models/pretrained", "Cifar_sgd_001"),
     "adam_001_wd": (adam_001_wd_pretrained_url, "./models/pretrained", "adam_001_wd"),
     "lenet": (lenet5_pretrained_url, "./models/pretrained", "MNIST_LeNet5"),
-    "imagenet": (imagenet_pretrained_url, "./models/pretrained/ImageNet", "imagenet")
+    "imagenet": (imagenet_pretrained_url, "./models/pretrained", "ImageNet")
     
 }
 

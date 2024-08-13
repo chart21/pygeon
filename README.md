@@ -100,7 +100,7 @@ python3 imagenet_files.py
 The script performs a few test inferences in PyTorch to ensure that the dataset was perpared correctly. The resulting models can then be used for inference with PIGEON. Execute the following commands from the `hpmpc` base directory to verify the accuracy of the models:
 ```sh
 export MODEL_DIR=nn/Pygeon/models/pretrained/ImageNet
-export DATA_DIR=nn/Pygeon/data
+export DATA_DIR=nn/Pygeon/data/datasets
 export SAMPLES_FILE=imagenet_128-256_images.bin
 export LABELS_FILE=imagenet_128-256_labels.bin
 export MODEL_FILE=AlexNet_imagenet.bin # use pretrained AlexNet

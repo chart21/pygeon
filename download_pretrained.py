@@ -76,9 +76,9 @@ if __name__ == "__main__":
 
     if "all" or "imagenet" in files_to_download:
         #move files to the correct location
-        os.makedirs("./data", exist_ok=True)
-        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_labels.bin", "./data/imagenet_128-256_labels.bin")
-        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_images.bin", "./data/imagenet_128-256_images.bin")
+        os.makedirs("./data/datasets/", exist_ok=True)
+        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_labels.bin", "./data/datasets/imagenet_128-256_labels.bin")
+        shutil.move("./models/pretrained/ImageNet/imagenet_128-256_images.bin", "./data//datasets/imagenet_128-256_images.bin")
 
     print("Download and extraction complete.")
 

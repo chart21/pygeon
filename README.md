@@ -85,6 +85,32 @@ We provide pretrained models for popular architectures such as VGG16, various Re
 
 Datasets get saved in the `./data` directory, and models get saved in the `./models/pretrained` directory.
 
+### ImageNet Models and Datasets
+
+The `imagenet_files.py` script exports PyTorch's pretrained VGG16 and AlexNet models and converts 128 images from the ImageNet validation dataset to `.bin` files compatible with PIGEON. To get started, download the ImageNet ILSCVR2012 validation dataset from the [official website](http://www.image-net.org/challenges/LSVRC/2012/), extract the downloaded `.tar.gz` file and move the `ILSVRC2012_val` directory to the `./data` directory. Then, run the following commands to save the models and datasets to the `./models/pretrained` and `./data` directories, respectively.
+
+```sh
+cp valprep.sh ./data/ILSVRC2012_val/
+cd ./data/ILSVRC2012_val/
+./valprep.sh
+cd ../..
+python3 imagenet_files.py
+```
+
+The script performs a few test inferences in PyTorch to ensure that the dataset was perpared correctly. The resulting models can then be used for inference with PIGEON. Execute the following commands from the `hpmpc` base directory to verify the accuracy of the models:
+```sh
+export MODEL_DIR=nn/Pygeon/models/pretrained
+export DATA_DIR=nn/Pygeon/data
+export SAMPLES_FILE=imagenet_images128-256.bin
+export LABELS_FILE=imagenet_labels128-256.bin
+export MODEL_FILE=AlexNet_imagenet.bin # use pretrained AlexNet
+# export MODEL_FILE=VGG_imagenet.bin # use pretrained VGG16
+make -j PARTY=all FUNCTION_IDENTIFIER=85 NUM_INPUTS=10 DATTYPE=64 BITLENGTH=64 FRACTIONAL=14 TRUNC_APPROACH=1 PROTOCOL=5 MODELOWNER=P_0 DATAOWNER=P_1 # Test 10 inferences of AlexNet on ImageNet, use FUNCTION_IDENTIFIER=86 for VGG16
+scripts/run.sh -p all -n 3
+```
+
+If you achieve 70% accuracy with AlexNet, the setup is correct.
+
 ### Command-Line Arguments
 
 The script accepts a list of files to download as command-line arguments. 

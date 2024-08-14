@@ -50,22 +50,26 @@ def train_and_evaluate(model, train_loader, test_loader, num_epochs=20, optimize
     return accuracy
 
 
-def evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss):
+def evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss, test_batches=-1):
     model.eval()
     correct = 0
     total = 0
     criterion = criterion_class()
     with torch.no_grad():
+        counter = 0
         for inputs, labels in test_loader:
+            if counter == test_batches:
+                break
+            counter += 1
             inputs, labels = inputs.to("cpu"), labels.to("cpu")
             outputs = model(inputs)
             _, predicted = outputs.max(1)
-            print("label: ", labels, "predicted: ", predicted)
+            # print("label: ", labels, "predicted: ", predicted)
             total += labels.size(0)
             correct += predicted.eq(labels).sum().item()
 
     accuracy = 100 * correct / total
-    print(f"Accuracy of the model on the test set: {accuracy:.2f}%")
+    print(f"Tested the model on {total} test samples, accuracy: {accuracy:.2f}%")
 
 def train_test(model, train_loader, test_loader, num_epochs=20, optimizer_class=optim.Adam, learning_rate=0.001, criterion_class=nn.CrossEntropyLoss, model_name="model", dataset_name="dataset", transform="standard", weight_decay=0.0, dropout=0.0):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

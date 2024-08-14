@@ -25,17 +25,25 @@ def train_test_model(model,dataset_name,num_epochs=80,lr=0.001, transform = "sta
     train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
     train.train_test(model, train_loader, test_loader, num_epochs, optimizier, lr, criterion,  model_name, dataset_name, transform, weight_decay, dropout)
 
+
 def load_model(model,filepath):
-    model.load_state_dict(torch.load(filepath+'.pth', map_location=torch.device('cpu')))
+    if os.path.exists(filepath+'.bin'):
+        parameter_export.read_params(model, filepath+'.bin')
+    elif os.path.exists(filepath+'.pth'):
+        model.load_state_dict(torch.load(filepath+'.pth', map_location=torch.device('cpu')))
+    elif os.path.exists(filepath+'.pth.tar'):
+        load_checkpoint(model,filepath)
+    else:
+        print("Could not find {}.bin or {}.pth or {}.pth.tar".format(filepath,filepath,filepath))
 
 def load_checkpoint(model,filepath):
     checkpoint = torch.load(filepath+'.pth.tar', map_location=torch.device('cpu'))
     model.load_state_dict({k.replace('module.',''): v for k, v in checkpoint['snet'].items()})
 
 
-def test_model(model,dataset_name,transform="standard",batch_size=32, criterion=nn.CrossEntropyLoss):
+def test_model(model,dataset_name,transform="standard",batch_size=32, criterion=nn.CrossEntropyLoss, test_batches=-1):
     train_loader, test_loader,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
-    train.evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss)
+    train.evaluate(model, test_loader, criterion_class=nn.CrossEntropyLoss, test_batches=test_batches)
 
 def export_test_dataset(dataset_name,transform="standard",batch_size=32):
     train_set, test_set,num_classes = data_load.load_dataset(dataset_name, transform, batch_size)
@@ -85,6 +93,7 @@ def main():
     parser.add_argument('--dropout', type=float, default=0.0, help='Dropout Rate, default is 0.0')
     parser.add_argument('--weight_decay', type=float, default=0.0, help='Weight Decay Rate, default is 0.0')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch Size, default is 32')
+    parser.add_argument('--test_batches', type=int, default=-1, help='Number of test batches to evaluate, default is -1 (whole test set)')
 
     # Add arguments for actions
     parser.add_argument('--action', type=str, choices=['train', 'import', 'train_all', 'test', 'none'], default='train', help='Action to perform on the model. Options are train (default), import, train_all, test, none')
@@ -125,7 +134,8 @@ def main():
         print("Parameters set to: num_epochs={}, lr={}, criterion={}, optimizer={}, weight_decay={}, dropout={}, batch_size={}".format(args.num_epochs, args.lr, args.criterion, args.optimizer, args.weight_decay, args.dropout, args.batch_size))
         train_all(args.num_epochs, args.lr, criterion, optimizer, weight_decay, dropout, batch_size)
     elif args.action == 'test':
-        test_model(model, args.dataset_name, args.transform, batch_size, criterion)
+        load_model(model, args.modelpath)
+        test_model(model, args.dataset_name, args.transform, batch_size, criterion, args.test_batches)
     elif args.action == 'none':
         print("No action specified for the model.")
 

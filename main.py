@@ -52,26 +52,22 @@ def export_test_dataset(dataset_name,transform="standard",batch_size=32):
 def train_all(num_epochs=80,lr=0.001,criterion=nn.CrossEntropyLoss,optimizer=optim.Adam, weight_decay=0.0, dropout=0.0, batch_size=32):
     models_mnist = [(cnns.LeNet5(num_classes=10,dropout=dropout),"LeNet5")]
     models_cifar10 = [(cnns.AlexNet(num_classes=10,dropout=dropout),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=10,dropout=dropout),"AlexNet_32"),(cnns.VGG16(num_classes=10,dropout=dropout),"VGG16"),(cnns.ResNet18_avg(num_classes=10,dropout=dropout),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=10,dropout=dropout),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=10,dropout=dropout),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=10,dropout=dropout),"ResNet152_avg"),(cnns.ResNet50(num_classes=10,dropout=dropout),"ResNet50"),(cnns.ResNet101(num_classes=10,dropout=dropout),"ResNet101"),(cnns.ResNet152(num_classes=10,dropout=dropout),"ResNet152")]   
-    models_cifar100 = [(cnns.AlexNet(num_classes=100,dropout=dropout),"AlexNet_CryptGPU"),(cnns.AlexNet_32(num_classes=100,dropout=dropout),"AlexNet_32"),(cnns.VGG16(num_classes=100,dropout=dropout),"VGG16"),(cnns.ResNet18_avg(num_classes=100,dropout=dropout),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=100,dropout=dropout),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=100,dropout=dropout),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=100,dropout=dropout),"ResNet152_avg"),(cnns.ResNet50(num_classes=100,dropout=dropout),"ResNet50"),(cnns.ResNet101(num_classes=100,dropout=dropout),"ResNet101"),(cnns.ResNet152(num_classes=100,dropout=dropout),"ResNet152")]
-    for model, model_name in models_mnist:
-        #get model name
-        transform = "standard"
-        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
-        # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
-        transform = "custom"
-        train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
-        # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
-    for model, model_name in models_cifar10:
-        #get model name
-        transform = "standard"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
-        # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
-        transform = "custom"
-        train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
-        # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
+    models_cifar100 = [(cnns.AlexNet_32(num_classes=100,dropout=dropout),"AlexNet_32"),(cnns.ResNet18_avg(num_classes=100,dropout=dropout),"ResNet18_avg"),(cnns.ResNet50_avg(num_classes=100,dropout=dropout),"ResNet50_avg"),(cnns.ResNet101_avg(num_classes=100,dropout=dropout),"ResNet101_avg"),(cnns.ResNet152_avg(num_classes=100,dropout=dropout),"ResNet152_avg"),(cnns.ResNet50(num_classes=100,dropout=dropout),"ResNet50"),(cnns.ResNet101(num_classes=100,dropout=dropout),"ResNet101"),(cnns.ResNet152(num_classes=100,dropout=dropout),"ResNet152")]
+    #for model, model_name in models_mnist:
+    #    transform = "standard"
+    #    train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    transform = "custom"
+    #    train_test_model(model,"MNIST", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    # train_model(model,"MNIST", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
+    #for model, model_name in models_cifar10:
+    #    transform = "standard"
+    #    train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    transform = "custom"
+    #    train_test_model(model,"CIFAR-10", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
+    #    # train_model(model,"CIFAR-10", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)
     for model, model_name in models_cifar100:
-        #get model name
-        model_name = model.__class__.__name__
         transform = "standard"
         train_test_model(model,"CIFAR-100", num_epochs, lr, transform, model_name, criterion, optimizer, weight_decay, dropout, batch_size)
         # train_model(model,"CIFAR-100", num_epochs, lr, transform, criterion, optimizer, weight_decay, dropout, batch_size)

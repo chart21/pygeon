@@ -1,8 +1,8 @@
 import torch
 import time
 from torch.utils.data import DataLoader, TensorDataset
-# from torchvision.models import alexnet, AlexNet_Weights
-# from torchvision.models import vgg16, VGG16_Weights
+from torchvision.models import alexnet, AlexNet_Weights
+from torchvision.models import vgg16, VGG16_Weights
 from tqdm import tqdm
 import cnns
 
@@ -14,8 +14,8 @@ models = [
         cnns.ResNet50_avg(num_classes=1000),
         cnns.ResNet101_avg(num_classes=1000),
         cnns.ResNet152_avg(num_classes=1000),
-        #alexnet(), // predefined PyTorch models
-        #vgg16() // predefined PyTorch models
+        alexnet(), # predefined PyTorch models
+        vgg16() # predefined PyTorch models
         
         
 ]

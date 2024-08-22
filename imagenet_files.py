@@ -25,9 +25,13 @@ transform = transforms.Compose([
 ])
 
 # Load ImageNet validation dataset
+batch_size = 32
+first_image = 128
+last_image = 256
+
 val_dir = './data/ILSVRC2012_val'
 val_dataset = ImageFolder(val_dir, transform=transform)
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4)
+val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=4)
 
 # Set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -45,7 +49,7 @@ for model in models:
         for images, labels in val_loader:
             #skip first 4 batches to avoid 0 labels
             counter += 1
-            if counter > 4:
+            if counter > first_image/batch_size:
 
                 images = images.to(device)
                 labels = labels.to(device)
@@ -56,11 +60,12 @@ for model in models:
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
                 # print("Label: ", labels, "Predicted: ", predicted)
-            if counter == 8:
+            if counter == last_image/batch_size:
                 break
 
         accuracy = 100 * correct / total
-        print(f'Accuracy of {model.__class__.__name__} on 128 images: {accuracy:.2f}%')
+        # print(f'Accuracy of {model.__class__.__name__} on 128 images: {accuracy:.2f}%')
+        print(f'Accuracy of {model.__class__.__name__} on images {first_image}-{last_image} of the validation dataset: {accuracy:.2f}%')
 
 
 def save_weights_compatible_with_cpp(model, filepath):
@@ -96,7 +101,7 @@ def export_dataset(dataset, images_filename, labels_filename):
         counter = 0
         for image, label in dataset:
             counter += 1
-            if counter > 32*4: #skip first 4 batches
+            if counter > first_image:
                 # Convert image to numpy array, ensure it's float32, and flatten
                 img_data = image.numpy().astype(np.float32).flatten()
 
@@ -107,14 +112,14 @@ def export_dataset(dataset, images_filename, labels_filename):
                 # print(label)
                 lbl_data = np.array(label).astype(np.uint32)
                 lbl_file.write(lbl_data.tobytes())
-            if counter == 32*8:
+            if counter == last_image:
                 return
 
 # Export the dataset
 os.makedirs('data/datasets', exist_ok=True)
 os.makedirs('models/pretrained/ImageNet', exist_ok=True)
-export_dataset(val_dataset, 'data/datasets/imagenet_128-256_images.bin', 'data/imagenet_128-256_labels.bin')
-print('Exported dataset to data/datasets/imagenet_128-256_images.bin and data/imagenet_128-256_labels.bin')
+export_dataset(val_dataset, 'data/datasets/imagenet_128-256_images.bin', 'data/datasets/imagenet_128-256_labels.bin')
+print('Exported dataset to data/datasets/imagenet_128-256_images.bin and data/datasets/imagenet_128-256_labels.bin')
 for model in models:
     save_weights_compatible_with_cpp(model, f'models/pretrained/ImageNet/{model.__class__.__name__}_imagenet.bin')
     print(f'Saved weights for {model.__class__.__name__} to models/pretrained/{model.__class__.__name__}_imagenet.bin')
